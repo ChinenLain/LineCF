@@ -30,9 +30,7 @@ const LineDataSideBar: React.FC = () => {
             </div>
             { selectedLine !== undefined && <div>
                 <DividerWithText text="折线信息"/>
-                <div
-                    data-description={'line title entry'}
-                >
+                <div>
                     <CustomInputField
                         title="折线标题"
                         type="text"

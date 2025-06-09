@@ -18,9 +18,9 @@ const DataPointGrid: React.FC = () => {
         <div className="mr-10">
             <div className="w-full grid gap-1 text-center text-sm" style={{ gridTemplateColumns: '10% 30% 30% 30%' }}>
                 <span className="bg-neutral py-1 rounded">#</span>
-                <span className="bg-neutral py-1 rounded">X-value</span>
-                <span className="bg-neutral py-1 rounded">Y-value</span>
-                <span className="bg-neutral py-1 rounded">Description</span>
+                <span className="bg-neutral py-1 rounded">X值</span>
+                <span className="bg-neutral py-1 rounded">Y值</span>
+                <span className="bg-neutral py-1 rounded">描述</span>
             </div>
         </div>
         {(X1.referenceValue === '' ||
@@ -28,7 +28,7 @@ const DataPointGrid: React.FC = () => {
             Y1.referenceValue === '' ||
             Y2.referenceValue === '')
           ? <div className="flex w-full pl-1 pt-2 mr-10 items-center text-darkgrey text-xs">
-                Calibrate your axes by adding reference values in the properties tab first!
+                请先在属性面板中校准轴线！
             </div>
           : <div>
                 {getLineFromKey(selectedLine, lines)?.dataPoints.length === 0 &&

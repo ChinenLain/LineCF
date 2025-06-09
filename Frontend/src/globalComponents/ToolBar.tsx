@@ -21,14 +21,14 @@ const ToolBar: React.FC = () => {
         <div className="z-20 w-16 flex flex-col bg-sidegrey rounded-[1.25rem] justify-center bg-opacity-50 shadow-lg items-center
       bg-[conic-gradient(at_bottom,_var(--tw-gradient-stops))] from-grey via-neutral to-darkgrey">
             <div className='h-4'/>
-            <div data-description={'Circle Tool'}>
+            <div>
                 <ModeButton Icon={CgShapeCircle} handleToggle={toggleCirclePlacer} toggleData={configuration.circlePlacer}/>
             </div>
-            <div id='step19' data-description={'OCR Tool'}>
+            <div>
                 <ModeButton Icon={RiCharacterRecognitionLine} handleToggle={toggleOCR}
                             toggleData={configuration.ocrTool}/>
             </div>
-            <div id='step17' data-description={'AI Tool'}>
+            <div>
                 <ModeButton Icon={ImMagicWand} size={24} handleToggle={toggleAuto} toggleData={configuration.autoTool}/>
             </div>
             <div className='h-8'/>

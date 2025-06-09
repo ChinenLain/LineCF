@@ -11,10 +11,6 @@ interface chartContextParams {
   title: string
   xTitle: string
   yTitle: string
-  legendTitle: string // 新添加的图例标题
-  legendColor: string // 新添加的图例颜色
-  setLegendTitle: any // 新添加的设置图例标题的函数
-  setLegendColor: any // 新添加的设置图例颜色的函数
   setTitle: any
   setXTitle: any
   setYTitle: any
@@ -48,10 +44,6 @@ const initialDefault: chartContextParams = {
   title: '',
   xTitle: '',
   yTitle: '',
-  legendTitle: '图例', // 默认图例标题
-  legendColor: '#57A773', // 默认图例颜色
-  setLegendTitle: () => {}, // 设置图例标题的默认函数
-  setLegendColor: () => {}, // 设置图例颜色的默认函数
   setTitle: () => {},
   setXTitle: () => {},
   setYTitle: () => {},

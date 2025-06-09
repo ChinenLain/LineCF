@@ -33,8 +33,6 @@ const App: React.FC = () => {
   const [Y2, setY2] = useState<PositionCalibration>(DEFAULT_CAL_POINT)
   const [scaleX, setScaleX] = useState<scaleTypes>('linear')
   const [scaleY, setScaleY] = useState<scaleTypes>('linear')
-  const [legendTitle, setLegendTitle] = useState('图例');
-  const [legendColor, setLegendColor] = useState('#57A773');
   const [dragOCR, setDragOCR] = useState<boolean>(false)
   const [OCRText, setOCRText] = useState<PositionText[]>([])
   const [configuration, setConfiguration] = useState<configurationTypes>({ circlePlacer: true, ocrTool: false, autoTool: false })
@@ -146,10 +144,6 @@ const App: React.FC = () => {
               setXAxisLabels,
               yAxisLabels,
               setYAxisLabels,
-              legendTitle, 
-              setLegendTitle,
-              legendColor, 
-              setLegendColor,
               lines,
               setLines,
               selectedLine,

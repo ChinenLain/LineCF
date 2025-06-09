@@ -20,7 +20,7 @@ const MainToggleButton: React.FC<Props> = ({ toggleData, handleToggle }) => {
                 className={`flex-grow py-1 ${!toggleData ? 'border-[1.5px] border-charcoal text-charcoal  bg-green' : 'bg-lightgrey text-darkgrey'} rounded-md`}
                 onClick={handleToggle}
             >
-                属性
+                图表属性
             </button>
         </div>
   )

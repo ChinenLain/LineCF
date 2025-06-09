@@ -15,14 +15,10 @@ const Sidebar: React.FC = () => {
             <MainToggleButton toggleData={toggleDataSidebar} handleToggle={handleToggle}/>
             <div className="pb-2"/>
                 <div className="w-[22.75rem] overflow-y-scroll">
-                    <div className={`${toggleDataSidebar ? '' : 'hidden'}`}
-                         data-description={'data side bar'}
-                    >
+                    <div className={`${toggleDataSidebar ? '' : 'hidden'}`}>
                         <LineDataSideBar/>
                     </div>
-                    <div className={`${toggleDataSidebar ? 'hidden' : ''}`}
-                         data-description={'properties side bar'}
-                    >
+                    <div className={`${toggleDataSidebar ? 'hidden' : ''}`}>
                         <LinePropertiesSideBar/>
                     </div>
                 </div>
