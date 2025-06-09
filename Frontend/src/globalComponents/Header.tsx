@@ -1,22 +1,55 @@
-import React, { type ChangeEvent, useContext, useState } from 'react'
+import React, { type ChangeEvent } from 'react'
+import { useContext } from 'react'
 import { ChartTypes } from '../constants/chartTypes'
 import { ChartContext } from '../globalUtilities/chartContext'
 
 import { IoFolderOpenOutline } from 'react-icons/io5'
-import ExportModal from './ExportModal'
 import { enqueueSnackbar } from 'notistack'
 import UndoRedo from './UndoRedo'
 import { DEFAULT_APP_STATE } from '../constants/mainTypesDefaults'
 import { ModeConfigurationContext } from '../globalUtilities/modeConfigurationContext'
 
+import { scaleValueToCalibration } from '../globalUtilities/dotInteractionUtility'
+import { type DataPoint } from '../types'
+
 const Header: React.FC = () => {
   const { imageSrc, setX1, setX2, setY1, setY2 } = useContext(ChartContext)
   const { setAppState } = useContext(ModeConfigurationContext)
 
-  const [showModal, setShowModal] = useState<boolean>(false)
-
-  const toggleModal = (): void => {
-    setShowModal(!showModal)
+  const { title, yTitle, xTitle, lines, X1, X2, Y1, Y2, scaleX, scaleY, description } = useContext(ChartContext)
+  const getCSVData = (): string => {
+    let csvData = ''
+    csvData += 'Title, ' + title + '\n Description,' + description + '\n xAxis Label, ' + xTitle + '\n yAxis Label, ' + yTitle
+    lines.forEach((line) => {
+      csvData += '\n' + line.title + '\n'
+      csvData += 'xCoordinate, yCoordinate\n'
+      line.dataPoints.forEach(({ xVal, yVal }: DataPoint) => {
+        const adjustedPosition = scaleValueToCalibration({ xVal, yVal }, X1, X2, Y1, Y2, scaleX, scaleY)
+        csvData += `${adjustedPosition.xVal}, ${adjustedPosition.yVal}\n`
+      })
+    })
+    return csvData
+  }
+  const downloadAsCSV = (): void => {
+    downloadFile(getCSVData(), `${title}_export.csv`, 'text/csv;charset=utf-8;')
+  }
+  const downloadFile = (data: string, filename: string, fileType: string): void => {
+    const blob = new Blob([data], { type: fileType })
+    const url = URL.createObjectURL(blob)
+    enqueueSnackbar('下载开始')
+    const link = document.createElement('a')
+    link.setAttribute('href', url)
+    link.setAttribute('download', filename)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+  const handleDownload = (): void => {
+    try {
+      downloadAsCSV()
+    } catch {
+      enqueueSnackbar('下载时发生错误')
+    }
   }
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -49,7 +82,7 @@ const Header: React.FC = () => {
         setY2({ xVal: axisOffset, yVal: axisOffset, referenceValue: '' })
       }
     }
-    enqueueSnackbar('Image uploaded')
+    enqueueSnackbar('图片上传成功')
   }
 
   return (
@@ -68,7 +101,7 @@ const Header: React.FC = () => {
             data-description='export button'>
                 {
                 imageSrc !== ''
-                  ? <button aria-label='export button' onClick={toggleModal} className="bg-blue font-medium border-[1.5px] border-charcoal border-solid py-1 px-6 mr-6 rounded text-charcoal text-base" id='step30'>
+                  ? <button aria-label='export button' onClick={handleDownload} className="bg-blue font-medium border-[1.5px] border-charcoal border-solid py-1 px-6 mr-6 rounded text-charcoal text-base" id='step30'>
                             导出
                         </button>
                   : <div className="opacity-0 font-medium border-[1.5px] border-solid py-1 px-6 mr-6 text-base">
@@ -76,7 +109,6 @@ const Header: React.FC = () => {
                             </div>
                     }
             </div>
-            {showModal && <ExportModal toggleModal={toggleModal}/>}
         </header>
   )
 }

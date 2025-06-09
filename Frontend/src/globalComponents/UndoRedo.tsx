@@ -24,7 +24,7 @@ const UndoRedo: React.FC = () => {
     undoHistory.current = tempArray
 
     if (remember === undefined) {
-      enqueueSnackbar('Nothing to undo')
+      enqueueSnackbar('没有操作可撤回')
       return
     }
     redoHistory.current = [...redoHistory.current, remember]
@@ -36,21 +36,17 @@ const UndoRedo: React.FC = () => {
     const remember = tempArray.pop()
     redoHistory.current = tempArray
     if (remember === undefined) {
-      enqueueSnackbar('Nothing to redo')
+      enqueueSnackbar('没有操作可重做')
       return
     }
     undoHistory.current = [...undoHistory.current, remember]
     setAppState(remember)
   }
   return (<div className='flex justify-center'>
-    <button className="cursor-pointer ml-5" onClick={undo}
-            data-description={'undo'}
-    >
+    <button className="cursor-pointer ml-5" onClick={undo}>
       <CiUndo size={32} />
     </button>
-    <button className="ml-5" onClick={redo}
-            data-description={'redo'}
-    >
+    <button className="ml-5" onClick={redo}>
       <CiRedo size={32}/>
     </button>
   </div>)
