@@ -23,7 +23,7 @@ const initialDefaults: imageContextParams = {
   originalImageWidth: 0,
   loaded: false,
   pos: { xVal: 0, yVal: 0 },
-  setPos: () => {}
+  setPos: () => {},
 }
 
 export const ImageContext = React.createContext<imageContextParams>(initialDefaults)

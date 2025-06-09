@@ -5,10 +5,10 @@ import { ModeConfigurationContext } from '../globalUtilities/modeConfigurationCo
 import OCRFeatures from './EditorModes/OCRFeatures'
 import CirclePlacerFeatures from './EditorModes/CirclePlacerFeatures'
 import AIFeatures from './EditorModes/AIFeatures'
-import ColorFilterFeatures from './EditorModes/ColorFilterFeatures'
 import LoadingIndicatorConfig from './spacing_and_headers/LoadingIndicatorConfig'
 import { getRemoteData } from '../api/axiosRequests'
 import { enqueueSnackbar } from 'notistack'
+import ColorFilterFeatures from './EditorModes/ColorFilterFeatures'
 
 const ImageEditor: React.FC = () => {
   const { imageHeight, imageWidth } = useContext(ImageContext)
@@ -21,6 +21,8 @@ const ImageEditor: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState<string>('LineFormer')
   const [aiLoading, setAiLoading] = useState<boolean>(false)
   const [remoteData, setRemoteData] = useState<Array<Array<{ x: number, y: number }>>>([])
+  const [filteredImageUrl, setFilteredImageUrl] = useState<string | null>(null)
+  const [colorOpen, setcolorOpen] = useState<boolean>(true)
 
   // 当进入autoTool模式时显示模型选择窗口
   useEffect(() => {
@@ -40,7 +42,13 @@ const ImageEditor: React.FC = () => {
 
     const fetchData = async (): Promise<void> => {
       try {
-        const result = await getRemoteData(imageSrc)
+        // 根据颜色过滤状态选择图片
+        let imageUrl = imageSrc
+
+        if (filteredImageUrl != null && colorOpen) {
+          imageUrl = filteredImageUrl
+        }
+        const result = await getRemoteData(imageUrl)
         if (result != null) {
           setRemoteData(result)
           enqueueSnackbar('AI处理完成!', { variant: 'success' })
@@ -145,7 +153,7 @@ const ImageEditor: React.FC = () => {
                 <CirclePlacerFeatures scale={scale} localSvgRef={localSvgRef} />
             </div>
             <div className={`absolute w-full h-full ${configuration.colorFilter ? '' : 'hidden'}`}>
-                <ColorFilterFeatures/>
+                <ColorFilterFeatures setImageUrl={setFilteredImageUrl} setColorOpen={setcolorOpen}/>
             </div>
             <div className={`absolute w-full h-full ${configuration.autoTool ? '' : 'hidden'}`}>
                 <AIFeatures scale={scale} localSvgRef={localSvgRef} remoteData={remoteData}
