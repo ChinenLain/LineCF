@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { ModeConfigurationContext } from '../globalUtilities/modeConfigurationContext'
 import ModeButton from './Buttons/ModeButton'
-import { RiCharacterRecognitionLine } from 'react-icons/ri'
+import { RiCharacterRecognitionLine, RiPaletteLine } from 'react-icons/ri'
 import { CgShapeCircle } from 'react-icons/cg'
 import { ImMagicWand } from 'react-icons/im'
 
@@ -13,6 +13,9 @@ const ToolBar: React.FC = () => {
   }
   const toggleOCR = (): void => {
     updateConfiguration('ocrTool')
+  }
+  const toggleColor = (): void => {
+    updateConfiguration('colorFilter')
   }
   const toggleAuto = (): void => {
     updateConfiguration('autoTool')
@@ -27,6 +30,10 @@ const ToolBar: React.FC = () => {
             <div>
                 <ModeButton Icon={RiCharacterRecognitionLine} handleToggle={toggleOCR}
                             toggleData={configuration.ocrTool}/>
+            </div>
+            <div>
+                <ModeButton Icon={RiPaletteLine} handleToggle={toggleColor}
+                            toggleData={configuration.colorFilter}/>
             </div>
             <div>
                 <ModeButton Icon={ImMagicWand} size={24} handleToggle={toggleAuto} toggleData={configuration.autoTool}/>

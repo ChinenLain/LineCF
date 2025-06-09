@@ -35,7 +35,7 @@ const App: React.FC = () => {
   const [scaleY, setScaleY] = useState<scaleTypes>('linear')
   const [dragOCR, setDragOCR] = useState<boolean>(false)
   const [OCRText, setOCRText] = useState<PositionText[]>([])
-  const [configuration, setConfiguration] = useState<configurationTypes>({ circlePlacer: true, ocrTool: false, autoTool: false })
+  const [configuration, setConfiguration] = useState<configurationTypes>({ circlePlacer: true, ocrTool: false, colorFilter: false, autoTool: false })
   const [draggingElement, setDraggingElement] = useState<string>()
   const [accessibleMode, setAccessibleMode] = useState<boolean>(false)
 

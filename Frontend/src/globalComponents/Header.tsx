@@ -97,8 +97,7 @@ const Header: React.FC = () => {
             <h1 className="absolute inset-x-0 text-center">
                 {ChartTypes.LINECHART}
             </h1>
-            <div className='flex items-center justify-end min-w-[30%] z-30'
-            data-description='export button'>
+            <div className='flex items-center justify-end min-w-[30%] z-30'>
                 {
                 imageSrc !== ''
                   ? <button aria-label='export button' onClick={handleDownload} className="bg-blue font-medium border-[1.5px] border-charcoal border-solid py-1 px-6 mr-6 rounded text-charcoal text-base" id='step30'>

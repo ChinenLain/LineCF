@@ -8,6 +8,7 @@ The context for the configuration made using the sidebar is stored here
 export interface configurationTypes {
   circlePlacer: boolean
   ocrTool: boolean
+  colorFilter: boolean
   autoTool: boolean
 }
 interface modeConfigParams {
@@ -40,6 +41,7 @@ export const modeConfigDefaults: modeConfigParams = {
   configuration: {
     circlePlacer: false,
     ocrTool: false,
+    colorFilter: false,
     autoTool: false
   },
   updateConfiguration: () => {},

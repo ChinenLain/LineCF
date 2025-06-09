@@ -51,6 +51,7 @@ export const DEFAULT_APP_STATE: AppState = {
   configuration: {
     circlePlacer: true,
     ocrTool: false,
+    colorFilter: false,
     autoTool: false
   },
   draggingElement: undefined,

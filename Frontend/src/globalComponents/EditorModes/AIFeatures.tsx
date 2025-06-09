@@ -4,8 +4,6 @@ import { type DataPoint, type Position } from '../../types'
 import { ChartContext } from '../../globalUtilities/chartContext'
 import { ModeConfigurationContext } from '../../globalUtilities/modeConfigurationContext'
 import { ImageContext } from '../../globalUtilities/imageContext'
-import { getRemoteData } from '../../api/axiosRequests'
-import LoadingIndicatorConfig from '../spacing_and_headers/LoadingIndicatorConfig'
 import { enqueueSnackbar } from 'notistack'
 import { v4 as uuidv4 } from 'uuid'
 import { calculatePositionOnPage } from '../../globalUtilities/calculationUtility'
@@ -14,22 +12,21 @@ import CustomInputField from '../fields/CustomInputField'
 interface Props {
   scale: number
   localSvgRef: React.RefObject<SVGSVGElement>
+  remoteData: Array<Array<{ x: number, y: number }>>
+  setRemoteData: React.Dispatch<React.SetStateAction<Array<Array<{ x: number, y: number }>>>>
 }
-const AIFeatures: React.FC<Props> = ({ scale, localSvgRef }) => {
-  const { lines, setLines, setSelectedLine, imageSrc } = useContext(ChartContext)
+const AIFeatures: React.FC<Props> = ({ scale, localSvgRef, remoteData, setRemoteData }) => {
+  const { lines, setLines, setSelectedLine } = useContext(ChartContext)
   const { saveHistory } = useContext(ModeConfigurationContext)
   const { imageWidth, imageHeight, originalImageHeight, originalImageWidth, setPos } = useContext(ImageContext)
   const scaleY = imageHeight / originalImageHeight
   const scaleX = imageWidth / originalImageWidth
   const [toggleMenu, setToggleMenu] = useState<boolean>(false)
-  const [remoteData, setRemoteData] = useState<Array<Array<{ x: number, y: number }>>>([])
   const [indexSelected, setIndexSelected] = useState<number>()
   const [positionMenu, setPositionMenu] = useState<Position>({ xVal: 0, yVal: 0 })
   const [sliderValue, setSliderValue] = useState(20)
   const [extractedPoints, setExtractedPoints] = useState<DataPoint[]>([])
   const [lineTitle, setLineTitle] = useState<string>('')
-  const [modelSelectOpen, setModelSelectOpen] = useState<boolean>(false) // 控制模型选择窗口
-  const [selectedModel, setSelectedModel] = useState<string>('LineFormer') // 默认选择LineFormer
 
   const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSliderValue(Number(event.target.value))
@@ -39,31 +36,12 @@ const AIFeatures: React.FC<Props> = ({ scale, localSvgRef }) => {
   }, [indexSelected])
 
   useEffect(() => {
-    if (imageSrc === '') return
-    setIndexSelected(undefined)
-    setToggleMenu(false)
-    setExtractedPoints([])
-    setRemoteData([])
-
-    // 打开模型选择窗口而不是直接发送请求
-    setModelSelectOpen(true)
-  }, [imageSrc])
-
-  // 处理模型选择后的确认操作
-  const handleModelConfirm = (): void => {
-    setModelSelectOpen(false) // 关闭模型选择窗口
-    const remoteFetcher = async (): Promise<void> => {
-      const remoteData = await getRemoteData(imageSrc)
-      if (remoteData !== undefined) {
-        setRemoteData(remoteData)
-      } else {
-        throw new Error('failed')
-      }
+    if (remoteData.length === 0) {
+      setIndexSelected(undefined)
+      setToggleMenu(false)
+      setExtractedPoints([])
     }
-    remoteFetcher().then(() => {}).catch(() => {
-      enqueueSnackbar('AI处理失败', { variant: 'error' })
-    })
-  }
+  }, [remoteData])
 
   useEffect(() => {
     if (remoteData.length === 0 || indexSelected === undefined) return
@@ -131,58 +109,6 @@ const AIFeatures: React.FC<Props> = ({ scale, localSvgRef }) => {
     )
   }
 
-  // 模型选择窗口渲染
-  const modelSelectorRenderer = (): React.ReactNode => {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-xl w-80">
-          <h3 className="text-lg font-medium mb-4 text-center">选择AI识别模型</h3>
-          <div className="mb-4">
-            <div className="flex items-center mb-3">
-              <input
-                type="radio"
-                id="lineFormer"
-                name="aiModel"
-                value="LineFormer"
-                checked={selectedModel === 'LineFormer'}
-                onChange={() => { setSelectedModel('LineFormer') }}
-                className="mr-2"
-              />
-              <label htmlFor="lineFormer" className="text-gray-700">LineFormer</label>
-            </div>
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="lineEx"
-                name="aiModel"
-                value="LineEX"
-                checked={selectedModel === 'LineEX'}
-                onChange={() => { setSelectedModel('LineEX') }}
-                className="mr-2"
-              />
-              <label htmlFor="lineEx" className="text-gray-700">LineEx</label>
-            </div>
-          </div>
-
-          <div className="flex justify-center space-x-3">
-            <button
-              onClick={handleModelConfirm}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors"
-            >
-              确认
-            </button>
-            <button
-              onClick={() => { setModelSelectOpen(false) }}
-              className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition-colors"
-            >
-              取消
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   const renderAllLines = (): React.ReactNode => {
     const colors = ['#57A773', '#5698D4', '#D9D9D9', '#E0AFA0', '#153243']
     return remoteData.map((line, index) => {
@@ -224,12 +150,6 @@ const AIFeatures: React.FC<Props> = ({ scale, localSvgRef }) => {
            onMouseMove={handleMouseMove}
       >
         <div style={{ position: 'relative', width: imageWidth, height: imageHeight, overflow: 'visible' }}>
-                  {/* 模型选择弹窗 */}
-                  {modelSelectOpen && modelSelectorRenderer()}
-
-                  <div className={`absolute ${remoteData.length === 0 ? '' : 'hidden'}`}>
-                  <LoadingIndicatorConfig/>
-                  </div>
               <div className={`${remoteData.length === 0 ? 'hidden' : ''}`} style={{ position: 'absolute', width: imageWidth, height: imageHeight, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'visible' }}>
                 <svg
                     className="absolute w-full h-full cursor-crosshair"

@@ -45,7 +45,7 @@ const Editor: React.FC = () => {
   }, [imageSrc])
 
   return (
-        <main className="flex flex-col items-start justify-start h-full w-full bg-neutral dot-background relative">
+        <main className="flex flex-col items-start justify-start h-full w-full bg-neutral relative">
           <div className="absolute flex h-full w-full left-10 items-center">
                 <ToolBar/>
           </div>
